@@ -510,8 +510,11 @@ $(document).ready(function () {
         if(item === '000001'){
           return `sh000001`
         }
+        if (item.startsWith('hk')) {
+          return `r_${item}`
+        }
         // 我国000或002开头的就是深证的，600开头的是上证的，300开头的是创业板 200开头的是深圳B股,900开头的是上海B股。
-        if(item.startsWith('00') || item.startsWith('300')){
+        else if(item.startsWith('00') || item.startsWith('300')){
           return `sz${item}`;
         }else {
           return `sh${item}`;

@@ -133,11 +133,13 @@ export default {
                 const str = transformUrl.substr(num)
                     .replace(/\//g, '_');
                 // 将str转为下划线形式（有些可能的驼峰的长单词），并全部大小
-                const lineUrl = this.toLine(str).toUpperCase();
+                const lineUrl = this.toLine(str);
                 // 如未提供开头的字符，则默认为空
-                const preUrl = this.pre ? `${this.pre.toUpperCase()}_` : '';
-                const upperKey = `${preUrl}${lineUrl}`;
-                action += `// ${chinese}\n${upperKey}: '${originUrl}', \n`;
+                const preUrl = this.pre ? `${this.pre}_` : '';
+                const upperKey = `${preUrl}${lineUrl}`
+                    .replace(/_\S/g, s => s.replace('_', '').toUpperCase());
+                // action += `// ${chinese}\n${upperKey}: '${originUrl}', \n`;
+                action += `export const ${upperKey} = ${method.toUpperCase()}() \`${originUrl}\`;  // ${chinese} \n`
                 newService += this.getFunc(serviceKey, upperKey, chinese, method);
             });
             serviceData.data = newService;
