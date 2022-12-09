@@ -6,9 +6,9 @@
                 const tableBodyTr = document.querySelectorAll('.ant-table-tbody tr');
                 tableBodyTr.forEach(el => {
                     const td = el.querySelectorAll('td');
-                    const text = td[0].querySelector('.path').textContent;
-                    const method = td[1].querySelector('.colValue').textContent;
-                    const api = td[1].querySelector('.path').textContent;
+                    const text = td[1].querySelector('.path').textContent;
+                    const method = td[2].querySelector('.colValue').textContent;
+                    const api = td[2].querySelector('.path').textContent;
                     result.push({
                         method, // 请求方法
                         api, // 请求url
@@ -22,11 +22,12 @@
             }
             if (request.action === 'getApi' ){
                 let result = [];
-                const tableBodyTr = document.querySelectorAll('.panel-view .row');
-                const text = tableBodyTr[0].querySelector('.colName').textContent;
-                const method = tableBodyTr[2].querySelector('.tag-method').textContent;
-                const api = tableBodyTr[2].querySelectorAll('.colValue')[2].textContent;
-                result.push({
+                const tableBodyTr = document.querySelectorAll('.interface-detail__container .interface-detail__item');
+                const text = tableBodyTr[0].querySelectorAll('span')[1].textContent;
+                const group = tableBodyTr[4].querySelectorAll('span');
+                const method = group[2].textContent;
+                const api =  group[3].textContent;
+                    result.push({
                     method, // 请求方法
                     api, // 请求url
                     text, // 注释

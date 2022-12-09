@@ -37,7 +37,7 @@ export default {
     data() {
         return {
             textData: DEFAULT_TEXT_DATA,
-            actionPre: '/v4/operation/',
+            actionPre: '/api/noah/',
             pre: '',
             list: [],
         };
