@@ -411,6 +411,8 @@ $(document).ready(function () {
     $('html').on('click',function(e){
       if(e.target.id !== 'time' && $(e.target).parents('#stockWrapper').length === 0){
         $('#stockWrapper').hide();
+        clearTimeout(stock.timer);
+        clearTimeout(stock.timer2);
       }
     });
     $('#time').on('click',function(){
@@ -421,10 +423,12 @@ $(document).ready(function () {
         // 设置显示持仓的股票
         $('#stockPosition textarea').val(settings.stock.position);
         stock.getStockData();
+        stock.getBTCData();
       }
     });
     let stock = {
       timer:'',
+      timer2:'',
       init(){
         this.bindEvent();
         const checked = settings.stock.freshCheckBox;
@@ -438,12 +442,15 @@ $(document).ready(function () {
           this.freshControl(freshVal);
         }else {
           clearTimeout(stock.timer);
+          clearTimeout(stock.timer2);
           stock.timer = '';
+          stock.timer2 = '';
         }
       },
       bindEvent(){
         $('#freshHand').on('click',function(){
           stock.getStockData();
+          stock.getBTCData();
         });
         $('#saveFreshParam').on('click',function(){
           settings.stock.freshCheckBox = $('#freshTimer').find('input[type=checkbox]').prop('checked');
@@ -470,6 +477,7 @@ $(document).ready(function () {
         let diff = 0;
         const time = date.getTime();
         $stockInfo.text('');
+        stock.freshTimerBtc(freshVal *1000);
         if(week===0 || week ===6){
           console.log('今天是周末');
           return false;// 不定时请求数据
@@ -527,6 +535,12 @@ $(document).ready(function () {
           this.freshTimer(time)
         },time)
       },
+      freshTimerBtc(time){
+        this.timer2 = setTimeout(()=>{
+          this.getBTCData();
+          this.freshTimerBtc(time)
+        },time)
+      },
       // 从服务器获取stock数据
       getStockData(){
         $.ajax({
@@ -536,6 +550,22 @@ $(document).ready(function () {
           timeout : 2000,
           success : function(data) {
             stock.createTable(data);
+          },
+          error : function() {
+          }
+        });
+      },
+      getBTCData(){
+        $.ajax({
+          type : "GET",
+          url : `https://blockchain.info/ticker`,
+          cache : "false",
+          timeout : 2000,
+          success : function(data) {
+            const $btcUsd = $('#stockWrapper .btc-usd')
+            $btcUsd.empty();
+            const value = data?.USD?.last;
+            $btcUsd.append(value);
           },
           error : function() {
           }
